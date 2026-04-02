@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "generate-uuid-version"
+version = "3.0.0"
+description = "Generate UUID values (v4, v7) with count support."
+readme = "README.md"
+authors = [
+  { name = "Troy Tessalone" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.8"
+
+keywords = ["uuid", "uuidv4", "uuidv7", "generator", "utility"]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+
+[project.urls]
+Homepage = "https://github.com/troytessalone/generate-uuid-version"
+Issues = "https://github.com/troytessalone/generate-uuid-version/issues"
