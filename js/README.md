@@ -46,7 +46,7 @@ console.log(result);
 ## Options
 
 | Field | Type | Required | Default | Description |
-|------|------|----------|--------|------------|
+|------|------|----------|---------|-------------|
 | count | number | No | 1 | Number of UUIDs to generate (min 1, max 10) |
 | version | string | No | v7 | UUID version: v4 or v7 |
 
@@ -76,14 +76,14 @@ generateUUID({ count: 2, version: "v7" });
 
 ## Supported Versions
 
-- v4 → random
-- v7 → modern time-based (recommended)
+- v4 = random
+- v7 = modern time-based (recommended)
 
 ---
 
-## Zapier Usage
+## Environment Notes
 
-If using in a Zapier Code step, add:
+Some hosted JavaScript runtimes require you to explicitly add npm packages before use. In those environments, add:
 
 - generate-uuid-version
 - uuid@10

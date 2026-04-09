@@ -81,6 +81,17 @@ generate_uuid(count=2, version="v7")
 
 ---
 
+## Environment Notes
+
+Some hosted Python runtimes require you to explicitly add packages before use. In those environments, add:
+
+```bash
+generate-uuid-version
+uuid6
+```
+
+---
+
 ## Behavior
 
 - Invalid or missing `count` defaults to 1
@@ -98,7 +109,7 @@ generate_uuid(count=2, version="v7")
 pip install uuid6
 ```
 
-- If not installed, v7 falls back to v4 internally
+- If `uuid6` is not installed, `version="v7"` falls back to v4 internally
 
 ---
 
