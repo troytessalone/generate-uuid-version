@@ -1,6 +1,6 @@
 {
   "name": "uuid-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate UUID values (v4, v7) with formatting, prefixes, and structured output.",
   "type": "module",
   "main": "./index.js",

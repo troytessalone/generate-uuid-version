@@ -1,6 +1,6 @@
-# generate-uuid-version
+# uuid-kit
 
-Generate UUID values (v4, v7) with simple controls in both JavaScript and Python.
+Generate UUID values (v4, v7) with flexible formatting and structured output options in both JavaScript and Python.
 
 ---
 
@@ -18,13 +18,13 @@ This repo contains two versions of the same utility:
 ### Install
 
 ```bash
-npm install generate-uuid-version
+npm install uuid-kit
 ```
 
 ### Usage
 
 ```js
-import { generateUUID } from "generate-uuid-version";
+import { generateUUID } from "uuid-kit";
 
 const result = generateUUID({
   count: 3,
@@ -47,13 +47,13 @@ console.log(result);
 ### Install
 
 ```bash
-pip install generate-uuid-version
+pip install uuid-kit
 ```
 
 ### Usage
 
 ```python
-from generate_uuid_version import generate_uuid
+from uuid_kit import generate_uuid
 
 result = generate_uuid(
     count=3,
@@ -76,6 +76,7 @@ print(result)
 ```json
 {
   "version": "v7",
+  "format": "standard",
   "count": 3,
   "items": [
     "uuid-1",
@@ -91,8 +92,12 @@ print(result)
 
 | Field | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| count | number / int | No | 1 | Number of UUIDs to generate (min 1, max 10) |
+| count | number / int | No | 1 | Number of UUIDs to generate (min 1, max 100) |
 | version | string | No | v7 | UUID version: v4 or v7 |
+| format | string | No | standard | Output format: standard, compact, uppercase, uppercase-compact |
+| prefix | string | No | "" | Text to prepend to each UUID |
+| suffix | string | No | "" | Text to append to each UUID |
+| asObjects | boolean / bool | No | false | Return structured objects instead of strings |
 
 ---
 
@@ -103,18 +108,28 @@ print(result)
 
 ---
 
+## Supported Formats
+
+- standard
+- compact
+- uppercase
+- uppercase-compact
+
+---
+
 ## Behavior
 
 - Invalid or missing `count` defaults to `1`
-- Maximum `count` is `10`
+- Maximum `count` is `100`
 - Invalid or missing `version` defaults to `v7`
+- Invalid or missing `format` defaults to `standard`
 
 ---
 
 ## Repository Structure
 
 ```text
-generate-uuid-version/
+uuid-kit/
   README.md
   LICENSE
   .gitignore
@@ -129,7 +144,7 @@ generate-uuid-version/
     LICENSE
     README.md
     pyproject.toml
-    generate_uuid_version/
+    uuid_kit/
       __init__.py
       core.py
 ```
@@ -141,6 +156,8 @@ generate-uuid-version/
 - `js/README.md` is the npm-focused package README
 - `py/README.md` is the PyPI-focused package README
 - This root `README.md` is the repo overview
+- Python uses `uuid_kit` as the import path
+- Python package distribution name is `uuid-kit`
 
 ---
 

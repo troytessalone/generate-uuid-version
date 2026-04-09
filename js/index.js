@@ -144,8 +144,8 @@ export function generateUUID({
 
   return {
     version: finalVersion,
-    count: safeCount,
     format: finalFormat,
+    count: safeCount,
     items
   };
 }
