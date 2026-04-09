@@ -51,7 +51,16 @@ export declare function generateUUID(
   options: GenerateUUIDOptions & { asObjects: true }
 ): GenerateUUIDResultObjects;
 
-export declare const ALLOWED_FORMATS: readonly UUIDFormat[];
-export declare const ALLOWED_VERSIONS: readonly UUIDVersion[];
+export declare const ALLOWED_FORMATS: readonly [
+  "standard",
+  "compact",
+  "uppercase",
+  "uppercase-compact"
+];
+
+export declare const ALLOWED_VERSIONS: readonly [
+  "v4",
+  "v7"
+];
 
 export default generateUUID;

@@ -79,7 +79,7 @@ export function generateUUID({
   // VALIDATE COUNT
   // ===============================
   let safeCount = Number(count);
-  if (Number.isNaN(safeCount) || safeCount < 1) safeCount = 1;
+  if (Number.isNaN(safeCount) || safeCount < 0) safeCount = 1;
   if (safeCount > 100) safeCount = 100;
   safeCount = Math.floor(safeCount);
 
@@ -96,8 +96,9 @@ export function generateUUID({
   // ===============================
   // VALIDATE FORMAT
   // ===============================
-  const finalFormat = ALLOWED_FORMATS.includes(format)
-    ? format
+  const normalizedFormat = String(format).toLowerCase();
+  const finalFormat = ALLOWED_FORMATS.includes(normalizedFormat)
+    ? normalizedFormat
     : "standard";
 
   // Precompute formatter
@@ -112,10 +113,10 @@ export function generateUUID({
     const raw = generator();
 
     // extract timestamp BEFORE mutations
-    let timestamp;
-    if (features?.hasTimestamp && features.extractTimestamp) {
-      timestamp = features.extractTimestamp(raw);
-    }
+    const timestamp =
+      features?.hasTimestamp && features.extractTimestamp
+        ? features.extractTimestamp(raw)
+        : undefined;
 
     // format
     let value = formatter(raw);

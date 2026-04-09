@@ -1,13 +1,15 @@
-# generate-uuid-version
+# uuid-kit
 
 Generate UUID values (v4, v7) with flexible formatting and structured output options.
+
+> Previously published as `generate-uuid-version`
 
 ---
 
 ## Install
 
 ```bash
-npm install generate-uuid-version
+npm install uuid-kit
 ```
 
 ---
@@ -15,7 +17,7 @@ npm install generate-uuid-version
 ## Usage
 
 ```js
-import { generateUUID } from "generate-uuid-version";
+import { generateUUID } from "uuid-kit";
 
 const result = generateUUID({
   count: 3,
@@ -106,6 +108,7 @@ generateUUID({
 ```
 
 Output:
+
 ```json
 {
   "version": "v7",
@@ -160,7 +163,7 @@ When `asObjects: true`, each item includes:
 import {
   ALLOWED_FORMATS,
   ALLOWED_VERSIONS
-} from "generate-uuid-version";
+} from "uuid-kit";
 ```
 
 ---
@@ -178,7 +181,7 @@ import {
 
 Some hosted JavaScript runtimes require you to explicitly add npm packages before use. In those environments, add:
 
-- generate-uuid-version
+- uuid-kit
 - uuid@10
 
 ---
