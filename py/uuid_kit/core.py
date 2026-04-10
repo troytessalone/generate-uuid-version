@@ -25,6 +25,12 @@ ALLOWED_VERSIONS = (
     "v7"
 )
 
+ALLOWED_OUTPUT_AS = (
+    "array",
+    "object",
+    "string"
+)
+
 
 def get_formatter(format_value):
     if format_value == "compact":
@@ -56,7 +62,7 @@ def generate_uuid(
     format="standard",
     prefix="",
     suffix="",
-    asObjects=False
+    outputAs="array"
 ):
     """
     Generate UUID values.
@@ -66,7 +72,7 @@ def generate_uuid(
     :param format: "standard", "compact", "uppercase", or "uppercase-compact"
     :param prefix: string to prepend to each UUID
     :param suffix: string to append to each UUID
-    :param asObjects: if True, return structured item objects
+    :param outputAs: "array", "object", or "string"
     :return: dict
     """
 
@@ -96,6 +102,12 @@ def generate_uuid(
     # ===============================
     normalized_format = str(format or "standard").lower()
     final_format = normalized_format if normalized_format in ALLOWED_FORMATS else "standard"
+
+    # ===============================
+    # VALIDATE OUTPUT SHAPE
+    # ===============================
+    normalized_output_as = str(outputAs or "array").lower()
+    final_output_as = normalized_output_as if normalized_output_as in ALLOWED_OUTPUT_AS else "array"
 
     formatter = get_formatter(final_format)
 
@@ -130,7 +142,8 @@ def generate_uuid(
     # ===============================
     # GENERATE
     # ===============================
-    items = []
+    values = []
+    objects = []
 
     for i in range(safe_count):
         raw = generator()
@@ -149,23 +162,33 @@ def generate_uuid(
         if suffix:
             value = value + str(suffix)
 
-        if asObjects:
-            obj = {
-                "uuid": value,
-                "raw": raw,
-                "index": i
-            }
+        values.append(value)
 
-            if timestamp:
-                obj["timestamp"] = timestamp
+        obj = {
+            "uuid": value,
+            "raw": raw,
+            "index": i
+        }
 
-            items.append(obj)
-        else:
-            items.append(value)
+        if timestamp:
+            obj["timestamp"] = timestamp
+
+        objects.append(obj)
+
+    # ===============================
+    # SHAPE OUTPUT
+    # ===============================
+    if final_output_as == "object":
+        items = objects
+    elif final_output_as == "string":
+        items = ",".join(values)
+    else:
+        items = values
 
     return {
         "version": final_version,
         "format": final_format,
+        "output_as": final_output_as,
         "count": safe_count,
         "items": items
     }

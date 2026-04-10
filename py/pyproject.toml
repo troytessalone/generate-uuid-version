@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uuid-kit"
-version = "1.0.2"
-description = "Generate UUID values (v4, v7) with flexible formatting and structured output options."
+version = "2.0.0"
+description = "Generate UUID values (v4, v7) with flexible formatting, prefixes, suffixes, and output shape options."
 readme = "README.md"
 authors = [
   { name = "Troy Tessalone" }
@@ -20,7 +20,9 @@ keywords = [
   "uuidv7",
   "generator",
   "utility",
-  "formatting"
+  "formatting",
+  "transform",
+  "output"
 ]
 
 classifiers = [

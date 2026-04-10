@@ -1,6 +1,6 @@
 # uuid-kit
 
-Generate UUID values (v4, v7) with flexible formatting and structured output options.
+Generate UUID values (v4, v7) with flexible formatting, prefixes, suffixes, and output shape options.
 
 ---
 
@@ -33,6 +33,7 @@ print(result)
 {
   "version": "v7",
   "format": "standard",
+  "output_as": "array",
   "count": 3,
   "items": [
     "uuid-1",
@@ -48,12 +49,12 @@ print(result)
 
 | Field | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| count | int | No | 1 | Number of UUIDs to generate (min 1, max 100) |
-| version | string | No | v7 | UUID version: v4 or v7 |
-| format | string | No | standard | Output format: standard, compact, uppercase, uppercase-compact |
+| count | int | No | 1 | Number of UUIDs to generate |
+| version | string | No | v7 | UUID version: `v4` or `v7` |
+| format | string | No | standard | Output format: `standard`, `compact`, `uppercase`, `uppercase-compact` |
 | prefix | string | No | "" | Text to prepend to each UUID |
 | suffix | string | No | "" | Text to append to each UUID |
-| asObjects | bool | No | False | Return structured objects instead of strings |
+| outputAs | string | No | array | Output shape: `array`, `object`, or `string` |
 
 ---
 
@@ -70,16 +71,37 @@ print(result)
 
 ## Examples
 
-### Default (v7)
+### Default
 
 ```python
 generate_uuid(count=2)
+```
+
+Output:
+
+```json
+{
+  "version": "v7",
+  "format": "standard",
+  "output_as": "array",
+  "count": 2,
+  "items": [
+    "uuid-1",
+    "uuid-2"
+  ]
+}
 ```
 
 ### v4
 
 ```python
 generate_uuid(count=2, version="v4")
+```
+
+### v7
+
+```python
+generate_uuid(count=2, version="v7")
 ```
 
 ### Compact format
@@ -99,10 +121,10 @@ generate_uuid(
 )
 ```
 
-### Return objects
+### Object output
 
 ```python
-generate_uuid(count=2, asObjects=True)
+generate_uuid(count=2, outputAs="object")
 ```
 
 Example output:
@@ -111,6 +133,7 @@ Example output:
 {
   "version": "v7",
   "format": "standard",
+  "output_as": "object",
   "count": 2,
   "items": [
     {
@@ -135,12 +158,53 @@ Example output:
 }
 ```
 
+### String output
+
+```python
+generate_uuid(count=3, outputAs="string")
+```
+
+Example output:
+
+```json
+{
+  "version": "v7",
+  "format": "standard",
+  "output_as": "string",
+  "count": 3,
+  "items": "uuid-1,uuid-2,uuid-3"
+}
+```
+
+---
+
+## Output Shapes
+
+### `outputAs="array"`
+
+Returns `items` as a list of formatted UUID strings.
+
+### `outputAs="object"`
+
+Returns `items` as a list of objects.
+
+Each object includes:
+
+- `uuid` = final formatted value
+- `raw` = original UUID before formatting
+- `index` = zero-based position in the result set
+- `timestamp` = only for v7, derived from the UUID
+
+### `outputAs="string"`
+
+Returns `items` as a single comma-delimited string.
+
 ---
 
 ## Supported Versions
 
-- v4 = random
-- v7 = modern time-based
+- `v4` = random
+- `v7` = modern time-based
 
 ---
 
@@ -148,7 +212,7 @@ Example output:
 
 ```python
 from uuid_kit import generate_uuid
-from uuid_kit import ALLOWED_FORMATS, ALLOWED_VERSIONS
+from uuid_kit import ALLOWED_FORMATS, ALLOWED_VERSIONS, ALLOWED_OUTPUT_AS
 ```
 
 ---
@@ -166,10 +230,11 @@ uuid6
 
 ## Behavior
 
-- Invalid or missing `count` defaults to 1
-- `count` is capped at 100
+- Invalid or missing `count` defaults to `1`
+- `count` is capped at `100`
 - Invalid or missing `version` defaults to `v7`
 - Invalid or missing `format` defaults to `standard`
+- Invalid or missing `outputAs` defaults to `array`
 
 ---
 
