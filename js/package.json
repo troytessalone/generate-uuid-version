@@ -1,7 +1,7 @@
 {
   "name": "uuid-kit",
   "version": "1.0.2",
-  "description": "Generate UUID values (v4, v7) with formatting, prefixes, and structured output.",
+  "description": "Generate UUID values (v4, v7) with formatting, prefixes, suffixes, and flexible output shapes.",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -33,6 +33,8 @@
     "uuidv7",
     "uuid-generator",
     "uuid-format",
+    "uuid-transform",
+    "uuid-output",
     "uuid-tools",
     "uuid-utility"
   ],

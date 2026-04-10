@@ -8,6 +8,8 @@ export type UUIDFormat =
   | "uppercase"
   | "uppercase-compact";
 
+export type UUIDOutputAs = "array" | "object" | "string";
+
 export interface UUIDTimestamp {
   iso: string;
   unix: number;
@@ -19,7 +21,7 @@ export interface GenerateUUIDOptions {
   format?: UUIDFormat;
   prefix?: string;
   suffix?: string;
-  asObjects?: boolean;
+  outputAs?: UUIDOutputAs;
 }
 
 export interface UUIDObject {
@@ -29,27 +31,44 @@ export interface UUIDObject {
   timestamp?: UUIDTimestamp;
 }
 
-export interface GenerateUUIDResultStrings {
+export interface GenerateUUIDResultBase {
   version: UUIDVersion;
   format: UUIDFormat;
+  output_as: UUIDOutputAs;
   count: number;
+}
+
+export interface GenerateUUIDResultArray extends GenerateUUIDResultBase {
+  output_as: "array";
   items: string[];
 }
 
-export interface GenerateUUIDResultObjects {
-  version: UUIDVersion;
-  format: UUIDFormat;
-  count: number;
+export interface GenerateUUIDResultObjects extends GenerateUUIDResultBase {
+  output_as: "object";
   items: UUIDObject[];
 }
 
-export declare function generateUUID(
-  options?: GenerateUUIDOptions & { asObjects?: false }
-): GenerateUUIDResultStrings;
+export interface GenerateUUIDResultString extends GenerateUUIDResultBase {
+  output_as: "string";
+  items: string;
+}
+
+export type GenerateUUIDResult =
+  | GenerateUUIDResultArray
+  | GenerateUUIDResultObjects
+  | GenerateUUIDResultString;
 
 export declare function generateUUID(
-  options: GenerateUUIDOptions & { asObjects: true }
+  options?: GenerateUUIDOptions & { outputAs?: "array" }
+): GenerateUUIDResultArray;
+
+export declare function generateUUID(
+  options: GenerateUUIDOptions & { outputAs: "object" }
 ): GenerateUUIDResultObjects;
+
+export declare function generateUUID(
+  options: GenerateUUIDOptions & { outputAs: "string" }
+): GenerateUUIDResultString;
 
 export declare const ALLOWED_FORMATS: readonly [
   "standard",
@@ -61,6 +80,12 @@ export declare const ALLOWED_FORMATS: readonly [
 export declare const ALLOWED_VERSIONS: readonly [
   "v4",
   "v7"
+];
+
+export declare const ALLOWED_OUTPUT_AS: readonly [
+  "array",
+  "object",
+  "string"
 ];
 
 export default generateUUID;

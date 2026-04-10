@@ -3,7 +3,7 @@
 import { v4 as uuidv4, v7 as uuidv7 } from "uuid";
 
 /**
- * EXPORTED VALIDATION CONSTANTS
+ * Allowed UUID output formats
  */
 export const ALLOWED_FORMATS = Object.freeze([
   "standard",
@@ -12,13 +12,36 @@ export const ALLOWED_FORMATS = Object.freeze([
   "uppercase-compact"
 ]);
 
+/**
+ * Allowed UUID versions
+ */
 export const ALLOWED_VERSIONS = Object.freeze([
   "v4",
   "v7"
 ]);
 
 /**
- * FORMATTERS
+ * Allowed output shapes
+ *
+ * array:
+ * - returns items as an array of UUID strings
+ *
+ * object:
+ * - returns items as an array of objects
+ * - each object includes uuid, raw, index
+ * - v7 also includes timestamp
+ *
+ * string:
+ * - returns items as a single comma-delimited string
+ */
+export const ALLOWED_OUTPUT_AS = Object.freeze([
+  "array",
+  "object",
+  "string"
+]);
+
+/**
+ * Return formatter function based on requested UUID format
  */
 function getFormatter(format) {
   switch (format) {
@@ -41,6 +64,7 @@ function extractTimestampV7(uuid) {
   const hex = uuid.replace(/-/g, "").slice(0, 12);
   const ms = parseInt(hex, 16);
   const date = new Date(ms);
+
   return {
     iso: date.toISOString(),
     unix: ms
@@ -48,7 +72,7 @@ function extractTimestampV7(uuid) {
 }
 
 /**
- * VERSION CONFIG (extensible + frozen)
+ * Version configuration
  */
 const VERSION_CONFIG = Object.freeze({
   v4: {
@@ -73,7 +97,7 @@ export function generateUUID({
   format = "standard",
   prefix = "",
   suffix = "",
-  asObjects = false
+  outputAs = "array"
 } = {}) {
   // ===============================
   // VALIDATE COUNT
@@ -94,12 +118,20 @@ export function generateUUID({
   const { generator, features } = VERSION_CONFIG[finalVersion];
 
   // ===============================
-  // VALIDATE FORMAT
+  // VALIDATE UUID FORMAT
   // ===============================
   const normalizedFormat = String(format).toLowerCase();
   const finalFormat = ALLOWED_FORMATS.includes(normalizedFormat)
     ? normalizedFormat
     : "standard";
+
+  // ===============================
+  // VALIDATE OUTPUT SHAPE
+  // ===============================
+  const normalizedOutputAs = String(outputAs).toLowerCase();
+  const finalOutputAs = ALLOWED_OUTPUT_AS.includes(normalizedOutputAs)
+    ? normalizedOutputAs
+    : "array";
 
   // Precompute formatter
   const formatter = getFormatter(finalFormat);
@@ -107,44 +139,56 @@ export function generateUUID({
   // ===============================
   // GENERATE
   // ===============================
-  const items = [];
+  const values = [];
+  const objects = [];
 
   for (let i = 0; i < safeCount; i++) {
     const raw = generator();
 
-    // extract timestamp BEFORE mutations
+    // Extract timestamp before formatting mutations
     const timestamp =
       features?.hasTimestamp && features.extractTimestamp
         ? features.extractTimestamp(raw)
         : undefined;
 
-    // format
     let value = formatter(raw);
 
-    // prefix / suffix
+    // Apply prefix / suffix
     if (prefix) value = prefix + value;
     if (suffix) value = value + suffix;
 
-    if (asObjects) {
-      const obj = {
-        uuid: value,
-        raw,
-        index: i
-      };
+    values.push(value);
 
-      if (timestamp) {
-        obj.timestamp = timestamp;
-      }
+    const obj = {
+      uuid: value,
+      raw,
+      index: i
+    };
 
-      items.push(obj);
-    } else {
-      items.push(value);
+    if (timestamp) {
+      obj.timestamp = timestamp;
     }
+
+    objects.push(obj);
+  }
+
+  // ===============================
+  // SHAPE OUTPUT
+  // ===============================
+  let items;
+
+  if (finalOutputAs === "object") {
+    items = objects;
+  } else if (finalOutputAs === "string") {
+    items = values.join(",");
+  } else {
+    items = values;
   }
 
   return {
     version: finalVersion,
     format: finalFormat,
+    output_as: finalOutputAs,
     count: safeCount,
     items
   };
