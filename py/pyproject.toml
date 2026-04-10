@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uuid-kit"
-version = "1.0.1"
+version = "1.0.2"
 description = "Generate UUID values (v4, v7) with flexible formatting and structured output options."
 readme = "README.md"
 authors = [
