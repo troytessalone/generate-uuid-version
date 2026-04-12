@@ -28,6 +28,11 @@ export interface UUIDObject {
   uuid: string;
   raw: string;
   index: number;
+  /**
+   * Only present when:
+   * - version = "v7"
+   * - outputAs = "object"
+   */
   timestamp?: UUIDTimestamp;
 }
 
@@ -58,6 +63,9 @@ export type GenerateUUIDResult =
   | GenerateUUIDResultObjects
   | GenerateUUIDResultString;
 
+/**
+ * Overloads for precise return typing
+ */
 export declare function generateUUID(
   options?: GenerateUUIDOptions & { outputAs?: "array" }
 ): GenerateUUIDResultArray;
@@ -69,6 +77,13 @@ export declare function generateUUID(
 export declare function generateUUID(
   options: GenerateUUIDOptions & { outputAs: "string" }
 ): GenerateUUIDResultString;
+
+/**
+ * Fallback signature (covers dynamic cases)
+ */
+export declare function generateUUID(
+  options?: GenerateUUIDOptions
+): GenerateUUIDResult;
 
 export declare const ALLOWED_FORMATS: readonly [
   "standard",

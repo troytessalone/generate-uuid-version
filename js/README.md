@@ -1,6 +1,6 @@
 # uuid-kit
 
-Generate UUID values (v4, v7) with flexible formatting, prefixes, suffixes, and output shape options.
+Generate UUID values (`v4`, `v7`) with flexible formatting, prefixes, suffixes, and output shape options.
 
 > Previously published as `generate-uuid-version`
 
@@ -154,7 +154,7 @@ Output:
       "index": 0,
       "timestamp": {
         "iso": "2026-04-09T18:12:34.567Z",
-        "unix": 1712686354567
+        "unix": 1775758354567
       }
     },
     {
@@ -163,7 +163,7 @@ Output:
       "index": 1,
       "timestamp": {
         "iso": "2026-04-09T18:12:35.123Z",
-        "unix": 1712686355123
+        "unix": 1775758355123
       }
     }
   ]
@@ -217,7 +217,7 @@ Each object includes:
 - `uuid` = final formatted value
 - `raw` = original UUID before formatting
 - `index` = zero-based position in the result set
-- `timestamp` = only for v7, derived from the UUID
+- `timestamp` = only included for `v7` when `outputAs` is `"object"`
 
 ### `outputAs: "string"`
 
@@ -252,6 +252,34 @@ import {
 - Invalid or missing `version` defaults to `v7`
 - Invalid or missing `format` defaults to `standard`
 - Invalid or missing `outputAs` defaults to `array`
+
+---
+
+## Performance Notes
+
+`uuid-kit` avoids unnecessary work during generation:
+
+- Object records are only built when `outputAs` is `"object"`
+- Timestamps are only extracted for `v7` object output
+- Array storage is preallocated for efficient generation
+
+This keeps array and string output paths lighter and faster.
+
+---
+
+## TypeScript
+
+The package includes TypeScript definitions for:
+
+- `UUIDVersion`
+- `UUIDFormat`
+- `UUIDOutputAs`
+- `UUIDTimestamp`
+- `UUIDObject`
+- `GenerateUUIDOptions`
+- `GenerateUUIDResult`
+
+The `generateUUID()` function also uses overloads so the return type matches `outputAs` when it is explicitly provided.
 
 ---
 

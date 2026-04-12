@@ -22,17 +22,6 @@ export const ALLOWED_VERSIONS = Object.freeze([
 
 /**
  * Allowed output shapes
- *
- * array:
- * - returns items as an array of UUID strings
- *
- * object:
- * - returns items as an array of objects
- * - each object includes uuid, raw, index
- * - v7 also includes timestamp
- *
- * string:
- * - returns items as a single comma-delimited string
  */
 export const ALLOWED_OUTPUT_AS = Object.freeze([
   "array",
@@ -137,19 +126,15 @@ export function generateUUID({
   const formatter = getFormatter(finalFormat);
 
   // ===============================
-  // GENERATE
+  // GENERATE (optimized)
   // ===============================
-  const values = [];
-  const objects = [];
+  const needsObject = finalOutputAs === "object";
+
+  const values = needsObject ? null : new Array(safeCount);
+  const objects = needsObject ? new Array(safeCount) : null;
 
   for (let i = 0; i < safeCount; i++) {
     const raw = generator();
-
-    // Extract timestamp before formatting mutations
-    const timestamp =
-      features?.hasTimestamp && features.extractTimestamp
-        ? features.extractTimestamp(raw)
-        : undefined;
 
     let value = formatter(raw);
 
@@ -157,19 +142,22 @@ export function generateUUID({
     if (prefix) value = prefix + value;
     if (suffix) value = value + suffix;
 
-    values.push(value);
+    if (needsObject) {
+      const obj = {
+        uuid: value,
+        raw,
+        index: i
+      };
 
-    const obj = {
-      uuid: value,
-      raw,
-      index: i
-    };
+      // Only compute timestamp if needed
+      if (features?.hasTimestamp && features.extractTimestamp) {
+        obj.timestamp = features.extractTimestamp(raw);
+      }
 
-    if (timestamp) {
-      obj.timestamp = timestamp;
+      objects[i] = obj;
+    } else {
+      values[i] = value;
     }
-
-    objects.push(obj);
   }
 
   // ===============================
